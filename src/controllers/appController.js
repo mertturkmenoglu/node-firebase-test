@@ -7,12 +7,17 @@ const getHomePage = (_req, res) => {
     posts: [],
   };
 
-  admin.firestore().collection('posts').get()
+  admin.firestore()
+    .collection('posts')
+    .orderBy('createdAt', 'desc')
+    .get()
     .then(snapshot => {
       renderOptions.posts = snapshot.docs.map(it => it.data());
-    }).catch(err => {
+    })
+    .catch(err => {
       console.error(err);
-    }).finally(() => {
+    })
+    .finally(() => {
       return res.render('HomePage', renderOptions);
     });
 }
@@ -20,16 +25,20 @@ const getHomePage = (_req, res) => {
 const createPost = (req, res) => {
   const { username, postContent } = req.body;
 
-  admin.firestore().collection('posts').add({
-    poster: username,
-    content: postContent
-  }).then(doc => {
-    console.log('Content created');
-    return res.redirect('/');
-  }).catch(err => {
-    console.error(err);
-    return res.redirect('/')
-  })
+  admin.firestore()
+    .collection('posts')
+    .add({
+      poster: username,
+      content: postContent,
+      createdAt: new Date(),
+    })
+    .then(_doc => {
+      return res.redirect('/');
+    })
+    .catch(err => {
+      console.error(err);
+      return res.redirect('/')
+    })
 }
 
 module.exports = {

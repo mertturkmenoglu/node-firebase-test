@@ -33,9 +33,15 @@
         </div>
       </form>
       <div class="mt-4">
-        <pre>
-          <%= JSON.stringify(posts) %>
-        </pre>
+        <% if (posts.length === 0) { %>
+          <div class="lead my-5">No content found</div>
+        <% } else { %>
+          <% posts.forEach(post=> { %>
+            <li class="lead mb-5">
+              <%= post.poster %> - <%= post.content %> - <%= new Date(post.createdAt._seconds) %>
+            </li>
+          <% }); %>
+        <% } %>
       </div>
     </div>
 </body>
