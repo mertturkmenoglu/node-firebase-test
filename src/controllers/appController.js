@@ -1,3 +1,5 @@
+const admin = require('firebase-admin');
+
 const getHomePage = (_req, res) => {
   const renderOptions = {
     path: '/',
@@ -8,8 +10,19 @@ const getHomePage = (_req, res) => {
 }
 
 const createPost = (req, res) => {
-  console.log('Create Post');
-  return res.status(200).send('Message received');
+  const db = admin.firestore();
+  const { username, postContent } = req.body;
+
+  db.collection('posts').add({
+    poster: username,
+    content: postContent
+  }).then(doc => {
+    console.log('Content created');
+    return res.redirect('/');
+  }).catch(err => {
+    console.error(err);
+    return res.redirect('/')
+  })
 }
 
 module.exports = {
