@@ -15,8 +15,23 @@
 
 <body>
   <%- include('./includes/Navbar.ejs') %>
-    <div class="container text-center">
-      <div class="mt-4 display-5 lead">Node Firebase Test</div>
+    <div class="container">
+      <div class="mt-4 display-5 lead  text-center">Node Firebase Test</div>
+      <form method="post" action="/create-post">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" name="username" class="form-control" id="username" aria-describedby="usernameHelp">
+          <div id="usernameHelp" class="form-text">Posted by</div>
+        </div>
+        <div class="mb-3">
+          <label for="postContent" class="form-label">Post Content</label>
+          <input type="text" name="postContent" class="form-control" id="postContent" aria-describedby="postContentHelp">
+          <div id="postContentHelp" class="form-text">Content</div>
+        </div>
+        <div class="d-grid gap-2">
+          <button id="createPostButton" type="submit" class="btn btn-primary block">Post</button>
+        </div>
+      </form>
     </div>
 </body>
 
