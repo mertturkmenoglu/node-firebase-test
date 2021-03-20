@@ -1,5 +1,6 @@
 const getHomePage = (_req, res) => {
   const renderOptions = {
+    path: '/',
     pageTitle: "Home",
   };
 
