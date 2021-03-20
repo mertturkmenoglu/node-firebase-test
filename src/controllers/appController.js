@@ -4,16 +4,23 @@ const getHomePage = (_req, res) => {
   const renderOptions = {
     path: '/',
     pageTitle: "Home",
+    posts: [],
   };
 
-  return res.render('HomePage', renderOptions);
+  admin.firestore().collection('posts').get()
+    .then(snapshot => {
+      renderOptions.posts = snapshot.docs.map(it => it.data());
+    }).catch(err => {
+      console.error(err);
+    }).finally(() => {
+      return res.render('HomePage', renderOptions);
+    });
 }
 
 const createPost = (req, res) => {
-  const db = admin.firestore();
   const { username, postContent } = req.body;
 
-  db.collection('posts').add({
+  admin.firestore().collection('posts').add({
     poster: username,
     content: postContent
   }).then(doc => {
