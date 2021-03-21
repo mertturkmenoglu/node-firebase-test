@@ -1,5 +1,7 @@
 const express = require('express');
 const admin = require('firebase-admin');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
 // Config and router files
 const serviceAccount = require('./config/serviceAccountKey.json');
@@ -7,9 +9,16 @@ const appRoutes = require('./routes/appRoutes');
 
 // App init
 const app = express();
+dotenv.config();
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
+});
+
+const MONGOOSE_OPTIONS = { useNewUrlParser: true, useUnifiedTopology: true };
+
+mongoose.connect(process.env.MONGO_URI, MONGOOSE_OPTIONS, () => {
+  console.log('Connected to MongoDB');
 });
 
 // Set view engine
