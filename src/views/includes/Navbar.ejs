@@ -15,6 +15,9 @@
           </li>
         <% } else { %>
           <li class="nav-item">
+            <a class="nav-link <%= path === '/create-post' ? 'active' : '' %>" aria-current="page" href="/create-post">Create Post</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" aria-current="page" href="/logout">Logout</a>
           </li>
         <% } %>

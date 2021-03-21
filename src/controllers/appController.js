@@ -48,7 +48,7 @@ const createPost = (req, res) => {
     })
 }
 
-const getLoginPage = (req, res) => {
+const getLoginPage = (_req, res) => {
   const renderOptions = {
     path: '/login',
     pageTitle: "Login",
@@ -58,7 +58,21 @@ const getLoginPage = (req, res) => {
   return res.render('LoginPage', renderOptions);
 }
 
-const getRegisterPage = (req, res) => {
+const getCreatePostPage = (req, res) => {
+  const renderOptions = {
+    path: '/create-post',
+    pageTitle: "Create Post",
+    user: null,
+  };
+
+  if (req.user) {
+    renderOptions.user = req.user;
+  }
+
+  return res.render('CreatePostPage', renderOptions);
+}
+
+const getRegisterPage = (_req, res) => {
   const renderOptions = {
     path: '/register',
     pageTitle: "Register",
@@ -85,8 +99,7 @@ const login = async (req, res) => {
 
   req.session.isLoggedIn = true;
   req.session.user = user;
-  return req.session.save(err => {
-    console.log(err);
+  return req.session.save(_err => {
     res.redirect('/');
   });
 }
@@ -126,8 +139,7 @@ const register = async (req, res) => {
 }
 
 const logout = (req, res) => {
-  req.session.destroy(err => {
-    console.log(err);
+  req.session.destroy(_err => {
     res.redirect('/');
   });
 }
@@ -137,6 +149,7 @@ module.exports = {
   createPost,
   getLoginPage,
   getRegisterPage,
+  getCreatePostPage,
   login,
   register,
   logout,

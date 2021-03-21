@@ -15,6 +15,7 @@ router.route('/register')
   .get(appController.getRegisterPage)
   .post(appController.register);
 
+router.get('/create-post', isAuth, appController.getCreatePostPage);
 router.post('/create-post', isAuth, appController.createPost);
 
 router.get('/logout', appController.logout);
