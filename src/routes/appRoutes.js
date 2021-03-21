@@ -6,9 +6,13 @@ const router = express.Router();
 
 router.get('/', appController.getHomePage);
 
-router.get('/login', appController.getLoginPage);
+router.route('/login')
+  .get(appController.getLoginPage)
+  .post(appController.login);
 
-router.get('/register', appController.getRegisterPage);
+router.route('/register')
+  .get(appController.getRegisterPage)
+  .post(appController.register);
 
 router.post('/create-post', appController.createPost);
 

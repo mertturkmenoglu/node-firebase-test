@@ -59,9 +59,19 @@ const getRegisterPage = (req, res) => {
   return res.render('RegisterPage', renderOptions);
 }
 
+const login = (req, res) => {
+  return res.status(200).send('OK');
+}
+
+const register = (req, res) => {
+  return res.status(200).send('OK');
+}
+
 module.exports = {
   getHomePage,
   createPost,
   getLoginPage,
   getRegisterPage,
+  login,
+  register,
 };
