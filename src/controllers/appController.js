@@ -1,11 +1,18 @@
 const admin = require('firebase-admin');
+const User = require('../models/User');
+const bcrypt = require('bcrypt');
 
-const getHomePage = (_req, res) => {
+const getHomePage = (req, res) => {
   const renderOptions = {
     path: '/',
     pageTitle: "Home",
     posts: [],
+    user: null,
   };
+
+  if (req.user) {
+    renderOptions.user = req.user;
+  }
 
   admin.firestore()
     .collection('posts')
@@ -45,6 +52,7 @@ const getLoginPage = (req, res) => {
   const renderOptions = {
     path: '/login',
     pageTitle: "Login",
+    user: null,
   };
 
   return res.render('LoginPage', renderOptions);
@@ -54,17 +62,74 @@ const getRegisterPage = (req, res) => {
   const renderOptions = {
     path: '/register',
     pageTitle: "Register",
+    user: null,
   };
 
   return res.render('RegisterPage', renderOptions);
 }
 
-const login = (req, res) => {
-  return res.status(200).send('OK');
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (user === null) {
+    return res.redirect('/login');
+  }
+
+  const passwordEqual = await bcrypt.compare(password, user.password);
+
+  if (!passwordEqual) {
+    return res.redirect('/login');
+  }
+
+  req.session.isLoggedIn = true;
+  req.session.user = user;
+  return req.session.save(err => {
+    console.log(err);
+    res.redirect('/');
+  });
 }
 
-const register = (req, res) => {
-  return res.status(200).send('OK');
+const register = async (req, res) => {
+  const { email, password, passwordConfirm } = req.body;
+
+  if (password !== passwordConfirm) {
+    return res.redirect('/register');
+  }
+
+  if (password.length < 6) {
+    return res.redirect('/register');
+  }
+
+  const userExists = await User.findOne({ email });
+
+  if (userExists !== null) {
+    return res.redirect('/register');
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = new User({
+    email: email,
+    password: hashedPassword,
+  });
+
+  try {
+    const savedUser = await user.save();
+    res.user = savedUser;
+    return res.redirect('/');
+  } catch (err) {
+    console.log(err);
+    return res.redirect('/register');
+  }
+}
+
+const logout = (req, res) => {
+  req.session.destroy(err => {
+    console.log(err);
+    res.redirect('/');
+  });
 }
 
 module.exports = {
@@ -74,4 +139,5 @@ module.exports = {
   getRegisterPage,
   login,
   register,
+  logout,
 };
