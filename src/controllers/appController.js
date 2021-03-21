@@ -41,7 +41,27 @@ const createPost = (req, res) => {
     })
 }
 
+const getLoginPage = (req, res) => {
+  const renderOptions = {
+    path: '/login',
+    pageTitle: "Login",
+  };
+
+  return res.render('LoginPage', renderOptions);
+}
+
+const getRegisterPage = (req, res) => {
+  const renderOptions = {
+    path: '/register',
+    pageTitle: "Register",
+  };
+
+  return res.render('RegisterPage', renderOptions);
+}
+
 module.exports = {
   getHomePage,
   createPost,
+  getLoginPage,
+  getRegisterPage,
 };
